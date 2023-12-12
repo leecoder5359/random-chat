@@ -1,9 +1,42 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import { Logger } from '@nestjs/common';
+import {
+  ConnectedSocket,
+  MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+} from '@nestjs/websockets';
+import { Socket } from 'socket.io';
 
 @WebSocketGateway()
-export class ChatsGateway {
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    return 'Hello world!';
+export class ChatsGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  constructor(private logger: Logger) {}
+
+  handleDisconnect(client: any) {
+    this.logger.log('handleDisconnect.', client);
+  }
+
+  handleConnection(@ConnectedSocket() socket: Socket) {
+    this.logger.log(`소켓 connected: ${socket.id} ${socket.nsp.name}`);
+  }
+
+  afterInit() {
+    this.logger.log('init');
+  }
+
+  @SubscribeMessage('new_user')
+  handleNewUser(
+    @MessageBody() userName: string,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    console.log(socket.id);
+    console.log(userName);
+
+    socket.broadcast.emit('user_connected', userName);
+    socket.emit('hello_user', `hello ${userName}`);
   }
 }
