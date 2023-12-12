@@ -33,10 +33,22 @@ export class ChatsGateway
     @MessageBody() userName: string,
     @ConnectedSocket() socket: Socket,
   ) {
-    console.log(socket.id);
-    console.log(userName);
-
+    const model = new newUserModel();
     socket.broadcast.emit('user_connected', userName);
     socket.emit('hello_user', `hello ${userName}`);
+  }
+
+  @SubscribeMessage('submit_chat')
+  handleSubmitChat(
+    @MessageBody() message: string,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    console.log(socket.id);
+    console.log(message);
+
+    socket.broadcast.emit('new_chat', {
+      message,
+      userName: socket.id,
+    });
   }
 }
