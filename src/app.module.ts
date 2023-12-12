@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { setTypeormMongo } from './lib/settings/set-typeorm-mongo';
 import { ChatsModule } from './chats/chats.module';
+import { SocketsModule } from './sockets/sockets.module';
 import mongoConfig from './config/mongo.config';
 
 @Module({
@@ -15,6 +16,7 @@ import mongoConfig from './config/mongo.config';
     }),
     TypeOrmModule.forRootAsync(setTypeormMongo),
     ChatsModule,
+    SocketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

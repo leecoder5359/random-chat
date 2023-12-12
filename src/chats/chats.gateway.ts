@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -9,12 +9,35 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
+import {
+  CHAT_SERVICE,
+  IChatService,
+} from './service/interface/chat-service.interface';
 
 @WebSocketGateway()
 export class ChatsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  constructor(private logger: Logger) {}
+  constructor(
+    private logger: Logger,
+    @Inject(CHAT_SERVICE) private chatService: IChatService,
+  ) {}
+
+  @SubscribeMessage('new_user')
+  handleNewUser(
+    @MessageBody() userName: string,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    this.chatService.entranceUser(socket, userName);
+  }
+
+  @SubscribeMessage('submit_chat')
+  handleSubmitChat(
+    @MessageBody() message: string,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    this.chatService.sendMessage(socket, message);
+  }
 
   handleDisconnect(client: any) {
     this.logger.log('handleDisconnect.', client);
@@ -26,29 +49,5 @@ export class ChatsGateway
 
   afterInit() {
     this.logger.log('init');
-  }
-
-  @SubscribeMessage('new_user')
-  handleNewUser(
-    @MessageBody() userName: string,
-    @ConnectedSocket() socket: Socket,
-  ) {
-    const model = new newUserModel();
-    socket.broadcast.emit('user_connected', userName);
-    socket.emit('hello_user', `hello ${userName}`);
-  }
-
-  @SubscribeMessage('submit_chat')
-  handleSubmitChat(
-    @MessageBody() message: string,
-    @ConnectedSocket() socket: Socket,
-  ) {
-    console.log(socket.id);
-    console.log(message);
-
-    socket.broadcast.emit('new_chat', {
-      message,
-      userName: socket.id,
-    });
   }
 }
