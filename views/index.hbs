@@ -1,23 +1,16 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <title>App</title>
+    <title>랜덤채팅접속</title>
     <link rel='stylesheet' href='css/styles.css' />
   </head>
   <body>
-    <div id='header'></div>
-    <div id='chatting_box'></div>
-    <form id='chat_form'>
-      <input id='chat_message_input' placeholder='메세지를 입력해주세요...' />
-      <button type='submit'>보내기</button>
-    </form>
-
-    <script
-      src='https://cdn.socket.io/3.1.3/socket.io.min.js'
-      integrity='sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh'
-      crossorigin='anonymous'
-    ></script>
-
-    <script src='js/scripts.js'></script>
+    <div>
+      <form action='/chat' method='GET'>
+        <label for='nickname'>사용할 닉네임:</label>
+        <input type='text' id='nickname' name='nickname' required />
+        <button type='submit'>Join</button>
+      </form>
+    </div>
   </body>
 </html>

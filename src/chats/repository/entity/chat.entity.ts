@@ -1,22 +1,18 @@
 import {
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
-  ObjectId,
-  ObjectIdColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Socket } from '../../../sockets/repository/entity/socket.entity';
 
 @Entity()
 export class Chat {
-  @ObjectIdColumn({ generated: 'uuid' })
-  id: ObjectId;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ type: 'varchar', comment: '메세지', nullable: false })
   message: string;
 
-  @ManyToOne(() => Socket, (socket) => socket.chatId)
-  @JoinColumn({ name: 'socket_id' })
-  socket: Socket;
+  @Column({ type: 'int', name: 'socket_id', nullable: true })
+  socketId: number;
 }

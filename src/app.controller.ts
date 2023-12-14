@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Query, Render } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,7 +7,14 @@ export class AppController {
 
   @Get()
   @Render('index')
-  home() {
-    return this.appService.getMessage();
+  home() {}
+
+  @Get('chat')
+  @Render('chat')
+  chat(@Query('nickname') nickname: string) {
+    return {
+      title: `${nickname}님의 채팅방`,
+      nickname
+    };
   }
 }

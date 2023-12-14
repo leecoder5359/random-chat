@@ -3,18 +3,18 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { setTypeormMongo } from './lib/settings/set-typeorm-mongo';
 import { ChatsModule } from './chats/chats.module';
 import { SocketsModule } from './sockets/sockets.module';
-import mongoConfig from './config/mongo.config';
+import postgresConfig from './config/postgres.config';
+import { setTypeormPostgres } from './lib/settings/set-typeorm-postgres';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [mongoConfig],
+      load: [postgresConfig],
     }),
-    TypeOrmModule.forRootAsync(setTypeormMongo),
+    TypeOrmModule.forRootAsync(setTypeormPostgres),
     ChatsModule,
     SocketsModule,
   ],

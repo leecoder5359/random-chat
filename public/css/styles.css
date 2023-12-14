@@ -1,3 +1,49 @@
 body {
-  background-color: bisque;
+  background-color: skyblue;
+  font-family: 'Arial', sans-serif;
+  padding: 10px;
+}
+
+#chatting_box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: blanchedalmond;
+}
+
+.chat-message {
+  max-width: 60%;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-connected,
+.disconnect-user {
+  color: gray;
+  text-align: center;
+  width: 100%;
+}
+
+.new-chat.self {
+  align-self: flex-end;
+  background-color: #fee500;
+  color: black;
+}
+
+.new-chat.other {
+  align-self: flex-start;
+  background-color: #ffffff;
+  color: black;
+}
+
+.user-name {
+  font-size: 0.8em;
+  color: gray;
+}
+
+.submit_chat {
+  color: red;
 }

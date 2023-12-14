@@ -1,16 +1,16 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export const setTypeormMongo = {
+export const setTypeormPostgres = {
   inject: [ConfigService],
   useFactory: async (configService: ConfigService) => {
     let obj: TypeOrmModuleOptions = {
-      type: 'mongodb',
-      host: configService.get('mongodb.host'),
-      port: configService.get('mongodb.port'),
-      database: configService.get('mongodb.database'),
-      username: configService.get('mongodb.username'),
-      password: configService.get('mongodb.password'),
+      type: 'postgres',
+      host: configService.get('postgres.host'),
+      port: configService.get('postgres.port'),
+      database: configService.get('postgres.database'),
+      username: configService.get('postgres.username'),
+      password: configService.get('postgres.password'),
       autoLoadEntities: true,
       synchronize: false,
     };

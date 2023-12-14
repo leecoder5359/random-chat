@@ -1,10 +1,9 @@
-import { Column, Entity, ObjectId, ObjectIdColumn, OneToMany } from 'typeorm';
-import { Chat } from '../../../chats/repository/entity/chat.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Socket {
-  @ObjectIdColumn({ generated: 'uuid' })
-  id: ObjectId;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({
     type: 'varchar',
@@ -23,7 +22,4 @@ export class Socket {
     nullable: false,
   })
   userName: string;
-
-  @OneToMany(() => Chat, (chat) => chat.id)
-  chatId: Chat[];
 }

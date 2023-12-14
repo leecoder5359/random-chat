@@ -9,8 +9,9 @@ services:
     ports:
       - 3000:3000
     environment:
-      - MONGODB_USERNAME=rootuser
-      - MONGODB_PASSWORD=rootpass
-      - MONGODB_HOST=mongodb
-      - MONGODB_PORT=27017
-      - MONGODB_DATABASE=random_chat
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=random_chat
+      - STAGE=local

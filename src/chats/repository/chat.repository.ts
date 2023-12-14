@@ -6,5 +6,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class ChatRepository implements IChatRepository {
-  constructor(@InjectRepository(Chat) repository: Repository<Chat>) {}
+  constructor(@InjectRepository(Chat) private repository: Repository<Chat>) {}
+  async save(message: string, socketId: number): Promise<void> {
+    const chat = this.repository.create({ message, socketId });
+    await this.repository.save(chat);
+  }
 }

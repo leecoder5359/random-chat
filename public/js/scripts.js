@@ -11,12 +11,16 @@ const newUserEmit = (userName) => {
 
 //global socket handler
 socket.on('user_connected', (userName) => {
-  setNewChat(`${userName}이 접속했습니다.`);
+  setNewChat(`${userName}이 접속했습니다.`, 'user_connected');
 });
 
 socket.on('new_chat', (data) => {
   const { message, userName } = data;
-  setNewChat(`${userName}: ${message}`);
+  setNewChat(`${message}`, 'new_chat', userName);
+});
+
+socket.on('disconnect_user', (userName) => {
+  setNewChat(`${userName}님이 퇴장하셨습니다.`, 'disconnect_user');
 });
 
 //event callback function
@@ -27,7 +31,7 @@ const handleSubmit = (event) => {
   if (inputMessage) {
     socket.emit('submit_chat', inputMessage);
 
-    setNewChat(`me: ${inputMessage}`);
+    setNewChat(`${inputMessage}`, 'submit_chat');
     event.target.elements[0].value = '';
   }
 };
@@ -42,16 +46,39 @@ const setUserInfo = (userName) => {
   headerElement.innerText = `${userName}의 랜덤 채팅`;
 };
 
-const setNewChat = (message) => {
-  const wrapperChatBox = document.createElement('div');
-  const chatBox = `<div>${message}</div>`;
-  wrapperChatBox.innerHTML = chatBox;
-  console.log(wrapperChatBox);
-  chattingBoxElement.append(wrapperChatBox);
+const setNewChat = (messageText, messageType, userName) => {
+  const messageElement = document.createElement('div');
+  messageElement.textContent = messageText;
+
+  switch (messageType) {
+    case 'user_connected':
+      messageElement.className = 'user-connected';
+      break;
+    case 'new_chat':
+      messageElement.className = 'chat-message other new-chat';
+      break;
+    case 'disconnect_user':
+      messageElement.className = 'disconnect-user';
+      break;
+    case 'submit_chat':
+      messageElement.className = 'chat-message self new-chat';
+      break;
+  }
+
+  if (userName) {
+    const userNameElement = document.createElement('span');
+    userNameElement.textContent = userName;
+    userNameElement.className = 'user-name';
+    messageElement.prepend(userNameElement);
+  }
+
+  chattingBoxElement.appendChild(messageElement);
 };
 
-const helloUser = () => {
-  const userName = prompt('사용할 닉네임을 적어주세요.');
+const helloUser = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const userName = urlParams.get('nickname');
+
   newUserEmit(userName);
   setUserInfo(userName);
   helloUserEvent();

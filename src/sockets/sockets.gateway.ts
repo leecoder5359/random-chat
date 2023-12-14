@@ -2,25 +2,20 @@ import { Inject, Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import {
-  CHAT_SERVICE,
-  IChatService,
-} from './service/interface/chat-service.interface';
+  ISocketService,
+  SOCKET_SERVICE,
+} from './service/interface/socket-service.interface';
 
 @WebSocketGateway()
-export class ChatsGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class SocketsGateway {
   constructor(
     private logger: Logger,
-    @Inject(CHAT_SERVICE) private chatService: IChatService,
+    @Inject(SOCKET_SERVICE) private socketService: ISocketService,
   ) {}
 
   @SubscribeMessage('new_user')
@@ -28,7 +23,7 @@ export class ChatsGateway
     @MessageBody() userName: string,
     @ConnectedSocket() socket: Socket,
   ) {
-    this.chatService.entranceUser(socket, userName);
+    this.socketService.entranceUser(socket, userName);
   }
 
   @SubscribeMessage('submit_chat')
@@ -36,11 +31,12 @@ export class ChatsGateway
     @MessageBody() message: string,
     @ConnectedSocket() socket: Socket,
   ) {
-    this.chatService.sendMessage(socket, message);
+    this.socketService.submitChat(socket, message);
   }
 
-  handleDisconnect(client: any) {
-    this.logger.log('handleDisconnect.', client);
+  async handleDisconnect(@ConnectedSocket() socket: Socket) {
+    await this.socketService.exitUser(socket);
+    this.logger.log('handleDisconnect.', socket.id);
   }
 
   handleConnection(@ConnectedSocket() socket: Socket) {
