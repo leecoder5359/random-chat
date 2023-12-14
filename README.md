@@ -1,7 +1,9 @@
 # Simple Random Chat
 
-<img src="./public/docs/입장.png" width="300">
-<img src="./public/docs/대화.png" width="300">
+<p float="left">
+  <img src="./public/docs/입장.png" width="300" />
+  <img src="./public/docs/대화.png" width="300" /> 
+</p>
 
 ## 설명
 
